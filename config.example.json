@@ -1,0 +1,20 @@
+{
+  "search": {
+    "bedrooms": 2,
+    "max_rent": 3000,
+    "location": {
+      "latitude": 30.2672,
+      "longitude": -97.7431,
+      "radius_miles": 3
+    }
+  },
+  "sources": {
+    "rentcast": true
+  },
+  "watch_urls": [
+    "https://example.com/a-building-you-want-to-check-manually"
+  ],
+  "email": {
+    "recipient": "you@example.com"
+  }
+}
