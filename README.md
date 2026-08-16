@@ -1,5 +1,11 @@
 # Apartment Listings Digest
 
+> **🌐 Shareable — works anywhere.** This is the general-purpose version: set it up
+> for **any city or area**. Anyone is welcome to use it — fork it, add your own
+> free RentCast key and email app-password, and get your own daily alerts.
+> (There's also a personal, **Newport-NJ-specific** variant with extra building
+> scrapers: [apartment-listings-tracker](https://github.com/pratka75/apartment-listings-tracker) — not intended for general use.)
+
 A **self-hosted daily email digest** of apartment listings that match your
 filters, powered by the [RentCast](https://www.rentcast.io/api) listings API.
 You run your own copy — your filters and secrets never leave your machine.
