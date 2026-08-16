@@ -28,11 +28,14 @@ def _require(cond, msg):
 
 
 def _clean_email(value, field):
+    """Accept one email, or several comma-separated. Each is validated; CR/LF are
+    stripped so this can't be used for SMTP header injection."""
     _require(isinstance(value, str), f"{field} must be a string")
-    # Strip to a single line to prevent SMTP header injection via config.
-    v = value.strip().replace("\r", "").replace("\n", "")
-    _require(_EMAIL_RE.match(v), f"{field} is not a valid email address: {value!r}")
-    return v
+    flat = value.replace("\r", " ").replace("\n", " ")
+    parts = [p.strip() for p in flat.split(",") if p.strip()]
+    _require(parts and all(_EMAIL_RE.match(p) for p in parts),
+             f"{field} must be one or more valid email addresses: {value!r}")
+    return ", ".join(parts)
 
 
 def _validate(cfg: dict) -> dict:
@@ -82,8 +85,11 @@ def _validate(cfg: dict) -> dict:
     _require(isinstance(sources, dict), "sources must be an object of {name: bool}")
 
     email = cfg.get("email", {})
-    _require(isinstance(email, dict) and email.get("recipient"), "email.recipient is required")
-    email["recipient"] = _clean_email(email["recipient"], "email.recipient")
+    _require(isinstance(email, dict), "email must be an object")
+    # recipient is OPTIONAL in config: it can instead come from the DIGEST_RECIPIENT
+    # env var (so it need not live in a public repo). Validate only if present.
+    if email.get("recipient"):
+        email["recipient"] = _clean_email(email["recipient"], "email.recipient")
 
     return cfg
 
