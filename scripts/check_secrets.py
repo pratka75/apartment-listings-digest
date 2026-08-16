@@ -27,9 +27,12 @@ except Exception:
 ROOT = Path(__file__).resolve().parent.parent
 PLACEHOLDERS = ("example", "your_", "your-", "here", "placeholder", "changeme", "xxxx")
 
-# Files that must never be tracked at all.
+# Files that must never be tracked at all. config.local.json stays forbidden here
+# (the shareable repo must not carry anyone's filters). snapshot.json /
+# rentcast_usage.json are intentionally committed by the GitHub Actions workflow
+# for state persistence (listing data + a counter, no secrets), so not forbidden.
 FORBIDDEN_NAMES = {".env", "apikey.txt", "gmail_sender.txt", "gmail_app_password.txt",
-                   "config.local.json", "snapshot.json", "rentcast_usage.json"}
+                   "config.local.json"}
 
 # Suspicious content patterns.
 PATTERNS = [

@@ -96,9 +96,9 @@ Fill in `RENTCAST_API_KEY`, `GMAIL_SENDER`, and `GMAIL_APP_PASSWORD`
 
 ### 5. Test and run
 ```bash
-python test_security.py     # optional: confirm the security checks pass
-python mailer.py            # send yourself an SMTP test
-python main.py --email      # fetch, build the digest, and email it
+python tests/test_security.py       # optional: confirm the security checks pass
+python -m apartment_alerts.mailer   # send yourself an SMTP test
+python main.py --email              # fetch, build the digest, and email it
 ```
 
 The first run treats everything as new and saves the baseline; from the second
@@ -123,19 +123,24 @@ somewhere always-on; be aware that means your secrets live there too.)
 
 ---
 
-## Files
+## Project layout
 
-| File | Purpose |
-|---|---|
-| `main.py` | Orchestrator |
-| `config.py` / `config.local.json` | Config loader / your filters (gitignored) |
-| `secrets_env.py` / `.env` | Secret loader / your secrets (gitignored) |
-| `safefetch.py` | SSRF-resistant HTTP helper |
-| `sources_rentcast.py` | RentCast fetcher (the data source) |
-| `sources_links.py` | Routes pasted links to the "Check manually" section |
-| `engine.py` | Snapshot + diff logic |
-| `digest.py` | HTML email builder (escaped) |
-| `mailer.py` | Gmail SMTP sender |
-| `scripts/check_secrets.py` | Pre-commit secret scanner |
-| `test_security.py` | Security regression suite |
-| `webapp/index.html` | Static settings builder |
+```
+main.py                       # entry point: python main.py [--email] [--no-save]
+apartment_alerts/             # the Python package
+├── cli.py                    # orchestrator
+├── config.py                 # loads config.local.json (repo root)
+├── secrets_env.py            # loads .env (repo root)
+├── safefetch.py              # SSRF-resistant HTTP helper
+├── engine.py                 # snapshot + diff
+├── digest.py                 # HTML email builder (escaped)
+├── mailer.py                 # Gmail SMTP sender
+└── sources/                  # rentcast.py (data source), links.py (routes links to "Check manually")
+scripts/check_secrets.py      # pre-commit secret scanner
+tests/test_security.py        # security regression suite (26 checks)
+webapp/index.html             # static settings builder
+config.local.json  .env       # your filters / secrets (both gitignored)
+```
+
+Runtime data lives at the repo root; the package resolves it via
+`apartment_alerts/paths.py`.
